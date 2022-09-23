@@ -1,141 +1,88 @@
-# Find-Passwords-By-Hash
+# Working with passwords
 
-Перед работой с двумя файлами для генерации файла с хешами и поиска паролей в файле (blackhole) необходимо установить через консоль `pycryptodome`. Для этого выполните следующий код в командной строке:
+Запуск и работа с API:
+
+Перед работой с двумя файлами для генерации файла с хешами и поиска паролей в файле (blackhole) необходимо установить через консоль 'pycryptodome', 'pathib'. Для этого необходимо выполнить в командной строке:
 
 ```python
-pip install pycryptodome  
+pip3 install pycryptodome  
+pip3 install  pathib
+``` 
+
+## - для того, чтобы сгенерировать файл хешей, заданной величины, необходимо обратиться к api gen.py через командную строку с параметрами:
+ 
+     python3 gen.py [PASSWORDS_FILE] [CODING] [HASH_ALGO] [OUTPUT_FILE_SIZE] [OUTPUT_FILE]
+    
+      
+     данная утилита не выводит ответа в консоль, она вычисляет заданное количество (OUTPUT_FILE_SIZE) хешей, создает(или перезаписывает) их в выходной          файл (OUTPUT_FILE), обработка паролей из файла паролей (PASSWORDS_FILE) происходит по заданной кодировке (CODING).
+      
+     пример возможного вызова:
+      
+     python3 gen.py passwords=input.txt code=utf-8 hash_func=sha1 words_val=1000 hashlist=output.txt
+      
+      
+        - gen.py - имя исполняемого файла
+        - input.txt - путь до файла с паролями, которые необходимо перевести в хеши
+        - utf-8 - кодировка
+        - sha1 - алгоритм хеширования
+        - output.txt - путь к файлу, в который будут сохраняться хеши
+  
+     порядок указанных переменных окружения неважен. обработка аргументов командной строки происходит с помощью модуля, реализованного в файле work_args.py. 
+     
+Утилита crack.py выводит в консоль сформированный словарь пароль-его хеш-значение, например:
 ```
-
-## Возможный вывод утилит: 
-
-Утилита generate.py в консоль выводит ничего. Утилита cracking.py выводит в консоль следующий пример вывода:
-```
-[OK] :  9ny438yt8vq  ::  fd8ad08e30bdc2d95366f275b69cd3a2
-
-[OK] :  tu8n954t8n  ::  e5af06c1354b81bda8a289959bf75fee
-
-[OK] :  ry4[tuyty4  ::  45b1cefc2f6d4e3df8b9f3647f4ce8b9
-
-[OK] :  ddfhsjkdfh  ::  a5e4cb6143327fc0c42946e0afb0b915
-
-[OK] :  ntu498yt  ::  3b13eddf1bc8a8186ed00605a51846fe
-
-[OK] :  huf984895ty  ::  8048dd65a7a549dbc3776fc97179c176
-
-[OK] :  hughfhg  ::  190daff9933330138e98b40fff1ee69a
-
-[OK] :  oooo  ::  8200ed3b76e52f89f7972ca7a4de7998
-
-[OK] :  ty8459t59  ::  051e6af375246917783d6178758aff03
-
-[OK] :  y598y89y  ::  474cbf5d008a9fc1147bd2aa76c0785a
+mtksnzgmqzppyjc : 7107b0550e126018d1fea26bb41b9b1ffca80f2e
+lqqrvlnmhmmyvqcljhy : 591ba587e2501fac6426c21db1124a9804e58490
+fwlnevrtebvvvxeemef : 16d5d12f5390173ababd01458deb6a9520c20e54
+aomospslodtemxd : c056645f0d26f83144915d13236cd5acf219c89b
+jhgnffhhsxj : b242842bade2f1c965e53d2186bf0e24ffcda965
+ffzjnfkddnbw : deb5e25bd22e0117309c968662411c9e03501961
+xqxuenobesgqfyvve : fe63594c18f725da4192ac0117e0d780ed72c34e
+ludhaaizkrmyvnmwmhv : 8914617d56c5cb34f748ff5305bd16a4215746f8
+eqxezzammvdusqumy : 6adc0958d7e71fd73de285a9f0ec5f3eba377662
+zlmuwykrcxuyiciax : 7a0b692fa3eb4a45a8402784719242d9c93b3612
+hexvjxaynk : c840ac597b4bd732bdca622a84aaa7c0cdf85508
+ybhdrectxrphhp : 4c83d1e06ea9f4e4adfe830bb183c013b7cb8062
 
 ====== System description =====
-macOS-12.0.1-arm64-arm-64bit arm
-====== Data description =====
-passwords ::  10  blackhole ::  50
-====== Time scale =====
-time ::  0.9597290803834977  cand/ms
+Darwin MacBook-Air-Angelina.local 21.1.0 
+Darwin Kernel Version 21.1.0: Wed Oct 13 17:33:24 PDT 2021; 
+root:xnu-8019.41.5~1/RELEASE_ARM64_T8101 x86_64
+====== ------------------ =====
 ```
 
 
-## Утилита generate
+## Утилита gen
 
-Данная утилита генерирует файл с хешами заданного размера (параметром), где часть хешей - захешированные пароли, переданные в аргументе утилите. Хеши паролей распределены по файлу выхода.
+Данная утилита генерирует файл с заданным количество хешей, часть из них - захешированные пароли, переданные с помощью йвходного файла как параметр командной строки утилиты. Остальные хеши - это хеши для рандомно-сгенерированных строк.
+  
+  
+## Утилита crack
+
+Утилита ищет заданные пароли, переданные файлом в виде аргумента в входном файле с захешированными паролями.   
 
 ```bash
-python3 generate.py [PASSWORDS_FILE] [CODING] [HASH_ALGO] [OUTPUT_FILE_SIZE] [OUTPUT_FILE]
+python3 cracking.py [PASSWORDS_FILE] [CODING] [HASH_ALGO] [HASHLIST_FILE]
 ```
+Пример запуска API через консоль: 
 
-Чтобы запустить утилиту по генерации файла с хешами необходимо выполнить следующий код в консоли (Пример): 
-
-```bash  
-python3 generate.py pass UTF-8 SHA1 200 out2.txt
 ```
-
-Где,
-+ generate.py - имя исполняемого файла
-+ pass - путь до файла с паролями, которые необходимо перевести в хеши
-+ UTF-8 - кодировка
-+ SHA1 - алгоритм хеширования
-+ out2.txt - путь к файлу, в который будут сохраняться хеши
-
-## Утилита cracking
-
-Утилита ищет заданные пароли, переданные файлом в виде аргумента в входном файле с захешированными паролями (blackhole).   
-
-```bash
-python3 cracking.py [PASSWORDS_FILE] [CODING] [HASH_ALGO] [BLACKHOLE_FILE]
+python3 crack.py passwords=input.txt code=utf-8 hash_func=sha1 hashlist=output.txt
 ```
-Чтобы запустить утилиту по поиску паролей в файле необходимо выполнить следующий код в консоли (Пример): 
-
-```bash  
-python3 cracking.py pass UTF-8 SHA1 200 out2.txt
-```
-
-Где,
-+ cracking.py - имя исполняемого файла
-+ pass - путь до файла с паролями, поиск которых будет исполняться
-+ UTF-8 - кодировка хешей
-+ SHA1 - алгоритм хеширования
-+ out2.txt - путь к файлу, в который будет проводиться поиск (blackhole in code)
+  
+- crack.py - имя исполняемого файла
+- input.txt - путь до файла с паролями, поиск которых будет исполняться
+- utf-8 - кодировка хешей
+- sha1 - алгоритм хеширования
+- output.txt - путь к файлу, в который будет проводиться поиск 
 
 Утилита выводит найденные пароли в формате, привиденном в пункте - Возможный вывод утилит и также небольшую информацию о статистике проведенного поиска. 
 
-```
-python3 cracking.py pass UTF-8 MD4 out1.txt
-====== System description =====
-macOS-12.0.1-arm64-arm-64bit arm
-===== Data description =====
-passwords ::  10  blackhole ::  200
-====== Time scale =====
-time ::  1.0710246772348424  cand/ms
-```
-
-
 ## Пример работы утилит
 
-Будем использовать файл с паролями - `./test_files/test.txt`. 
+В программе test.py приведен алгоритм проведения тестирования, в результате которого было получено, что в среднем скорость обработки кандидатов = 60,5 кандидатов/секунду.
 
-Выполним утилиту generate с параметрами: 
-
-```bash
-python3 generate.py ./test_files/test.txt UTF-8 MD5 100 out.txt
-```
-Выполним утилиту cracking с параметрами, удалив 1 пароль из списка `./test_files/test_out.txt`.
-
-```bash
-python3 cracking.py ./test_files/test.txt UTF-8 MD5 ./test_files/test_out.txt
-```
-
-Получим вывод: 
-
-```bash
-[OK] :  hughfhg  ::  4cfccd210542b9204bc0e9a84423d36e
-
-[OK] :  ddfhsjkdfh  ::  cef6f25e65b3f14fc34b8f57271e5491
-
-[OK] :  ty8459t59  ::  3628fb484a0501cb6d36ab6696702876
-
-[OK] :  ntu498yt  ::  c2dd2c4a5b1647ab32328341fcbcca62
-
-[OK] :  y598y89y  ::  f4e784b371eafed9c6c20097551ccab5
-
-[OK] :  ry4[tuyty4  ::  eef0f9f783218ccd61b9db4cf05ade6f
-
-[OK] :  tu8n954t8n  ::  519808899315c2af742d0f305065382a
-
-[OK] :  huf984895ty  ::  08ac9bf621822c9eb8716c0491177125
-
-====== System description =====
-macOS-12.0.1-arm64-arm-64bit arm
-====== Data description =====
-passwords ::  9  blackhole ::  100
-====== Time scale =====
-time ::  0.9566360963682851  cand/ms
-
-```
-> Использованные файлы также приложены в проекте. 
+Тестирование проводилось следующим образом: 20 раз повторялся алгоритм - сгенерировать от 500 до 1000 паролей в файл input.txt, задать от 1000 до 2500 кол-во выходных хешей для файла output.txt - применить алгоритм gen с заданными параметрами, далее для каждой такой пары файлов запускалась утилита crack.py, до начала работы которой и после ставились временные метки, чтобы замерить длительность выполнения работы программы. Далее кол-во паролей из файла input делилось на полученное время и информация по каждой итерации записывалась в result.txt.
 
 
 
