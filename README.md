@@ -23,7 +23,7 @@ pip install  pathib
      python main.py --func=gen --passwords=input.txt --hashlist=out.txt --code=utf-8 --hash_func=sha256 --words_val=1000 
       
         - main.py - имя исполняемого файла
-        - пут - имя исполняемой функции - генерация хешей для паролей
+        - gen - имя исполняемой функции - генерация хешей для паролей
         - input.txt - путь до файла с паролями, которые необходимо перевести в хеши
         - utf-8 - кодировка
         - sha256 - алгоритм хеширования
